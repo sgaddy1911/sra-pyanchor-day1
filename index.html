@@ -452,8 +452,8 @@ const DEEP=[
   ]},
   {qs:[
     {type:'predict',q:'What does this output?\n\nfirst = "Palm"\nlast = "Beach"\nprint(first + last)',opts:['Palm Beach','PalmBeach','first + last','Error'],ans:1,why:'No space string between variables — concatenation gives PalmBeach. You need + " " + to add the space.'},
-    {type:'faded',q:'Complete the code to print "Miami Buddy" with a space:\n\nprint(city ___ " " ___ pet)',opts:['& , &','+ , +',', ,','. .'],ans:1,why:'+ is Python's concatenation operator. city + " " + pet joins the values with a space between them.'},
-    {type:'debug',q:'Find the error:\n\nprint("city" + " " + "pet")',opts:['Missing + between strings','"city" and "pet" are quoted — prints literally, not variable values','Should use , not +','print is wrong case'],ans:1,why:'Quotes make text literal. "city" outputs the word city, not the variable's value. Remove quotes: print(city + " " + pet)'}
+    {type:'faded',q:'Complete the code to print "Miami Buddy" with a space:\n\nprint(city ___ " " ___ pet)',opts:['& , &','+ , +',', ,','. .'],ans:1,why:'+ is Python\'s concatenation operator. city + " " + pet joins the values with a space between them.'},
+    {type:'debug',q:'Find the error:\n\nprint("city" + " " + "pet")',opts:['Missing + between strings','"city" and "pet" are quoted — prints literally, not variable values','Should use , not +','print is wrong case'],ans:1,why:'Quotes make text literal. "city" outputs the word city, not the variable\'s value. Remove quotes: print(city + " " + pet)'}
   ]},
   {qs:[
     {type:'predict',q:'What does this output?\n\nprint("Name:\\nAge:")',opts:['Name:\\nAge:','Name: Age:','Name: on line 1, Age: on line 2','Error'],ans:2,why:'\\n is a newline instruction — invisible in output. The string splits into two lines: Name: and Age:'},
@@ -462,7 +462,7 @@ const DEEP=[
   ]},
   {qs:[
     {type:'predict',q:'What does this output?\n\nword = "Python"\nprint(len(word))',opts:['"Python"','word','6','7'],ans:2,why:'P-y-t-h-o-n = 6 characters. len() returns the count as a number, not the string itself.'},
-    {type:'faded',q:'Complete the code to print character count:\n\nname = "Shawn"\nprint(___(name))',opts:['size','count','length','len'],ans:3,why:'Python's built-in for character count is len() — not length(), size(), or count(). Those cause NameError.'},
+    {type:'faded',q:'Complete the code to print character count:\n\nname = "Shawn"\nprint(___(name))',opts:['size','count','length','len'],ans:3,why:'Python\'s built-in for character count is len() — not length(), size(), or count(). Those cause NameError.'},
     {type:'debug',q:'Find the error:\n\nname = "Python"\nprint(length(name))',opts:['name needs quotes in print','length() is not Python — use len()','print should be Print','Missing \\n at end'],ans:1,why:'Python uses len(), not length(). length() is from other languages — calling it throws a NameError.'}
   ]},
   {qs:[
@@ -664,22 +664,6 @@ function up(){
   }
 }
 
-  else if(phase==='deep_q'){
-    const q=DEEP[modIdx].qs[deepIdx];
-    const qt=q.q.replace(/\n/g,'<br>');
-    const typeLabel=q.type==='predict'?'🔮 Predict the Output':q.type==='faded'?'✏️ Fill in the Blank':'🐛 Find the Bug';
-    m.innerHTML=`
-      <div class="card cd">
-        <div class="ey d">⚡⚡ DEEP DRILL ${deepIdx+1} OF 3 · ${MODS[modIdx].title}</div>
-        <div class="qtype">${typeLabel}</div>
-        <div class="qq">${qt}</div>
-        <div class="opts" id="opts">${buildOpts(q,'ansDeep')}</div>
-        <div class="fb" id="fb"></div>
-        <button class="btn btn-d hid" id="nb" onclick="nxtDeep()">Continue →</button>
-      </div>`;
-    setTimeout(()=>readQuestion(q),200);
-  }
-
 function chtml(lines){return lines.join('<br>');}
 
 function render(){
@@ -791,6 +775,20 @@ function render(){
         <button class="btn btn-a hid" id="nb" onclick="nxtC()">Continue →</button>
       </div>`;
     setTimeout(()=>readQuestion(q),200);
+  }
+  else if(phase==='deep_q'){
+    const q=DEEP[modIdx].qs[deepIdx];
+    const qt=q.q.replace(/\n/g,'<br>');
+    const typeLabel=q.type==='predict'?'🔮 Predict the Output':q.type==='faded'?'✏️ Fill in the Blank':'🐛 Find the Bug';
+    m.innerHTML=`
+      <div class="card cd">
+        <div class="ey d">⚡⚡ DEEP DRILL ${deepIdx+1} OF 3 · ${MODS[modIdx].title}</div>
+        <div class="qtype">${typeLabel}</div>
+        <div class="qq">${qt}</div>
+        <div class="opts" id="opts">${buildOpts(q,'ansDeep')}</div>
+        <div class="fb" id="fb"></div>
+        <button class="btn btn-d hid" id="nb" onclick="nxtDeep()">Continue →</button>
+            </div>`;etTimeout(()=>readQuestion(q),200);
   }
 }
 
