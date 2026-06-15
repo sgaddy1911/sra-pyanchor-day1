@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PyAnchor — Day 1 Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0B0F1E;--s1:#141829;--s2:#1A2038;--bd:#242B45;
+  --v:#7C3AED;--vl:#A78BFA;--a:#F59E0B;--g:#10B981;--r:#EF4444;
+  --tx:#F1F5F9;--mx:#94A3B8;--cb:#080D1A;--d:#06B6D4;
+}
+html,body{background:var(--bg);color:var(--tx);font-family:'Space Grotesk',sans-serif;min-height:100vh;font-size:16px;-webkit-font-smoothing:antialiased}
+#hdr{padding:18px 18px 14px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid rgba(36,43,69,.6)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.logo{display:flex;align-items:center;gap:10px}
+.lm{width:36px;height:36px;background:var(--v);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#fff;letter-spacing:0;flex-shrink:0}
+.lt{font-size:17px;font-weight:700;letter-spacing:-.4px;line-height:1.1}
+.ls{font-size:10px;color:var(--a);font-weight:700;letter-spacing:1.3px;text-transform:uppercase;margin-top:2px}
+#sb{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;color:var(--a);font-family:'Space Grotesk',sans-serif;cursor:default}
+.prow{display:flex;justify-content:space-between;font-size:11px;color:var(--mx);font-weight:600;margin-bottom:6px;letter-spacing:.2px}
+.pt{height:3px;background:var(--bd);border-radius:3px;overflow:hidden}
+.pf{height:100%;background:var(--v);border-radius:3px;transition:width .5s ease}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:11px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--bd);transition:all .3s}
+.dot.act{background:var(--v);transform:scale(1.4)}
+.dot.dn{background:var(--g)}
+#main{padding:16px 18px 120px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:18px}
+.card.cv{border-left:3px solid var(--v)}
+.card.ca{border-left:3px solid var(--a)}
+.card.cg{background:var(--s1);border:1px solid rgba(16,185,129,.4)}
+.ey{font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8px}
+.ey.v{color:var(--vl)}.ey.a{color:var(--a)}.ey.g{color:var(--g)}
+.ctitle{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:3px;font-family:'JetBrains Mono',monospace;line-height:1.2;color:var(--tx)}
+.csubt{font-size:13px;color:var(--mx);margin-bottom:12px;font-weight:500}
+.cdesc{font-size:14px;line-height:1.68;color:#CBD5E1;margin-bottom:14px}
+.cur{display:inline-block;width:2px;height:20px;background:var(--a);margin-left:1px;vertical-align:-3px;animation:bl 1s step-end infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+.cb{background:var(--cb);border:1px solid var(--bd);border-radius:10px;padding:13px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;overflow-x:auto}
+.ck{color:#FF7B72}.cs{color:#A5D6FF}.cm{color:#6E7681;font-style:italic}.cf{color:#D2A8FF}.co{color:#56D364}.cn{color:#79C0FF}.pr{color:rgba(167,139,250,.6);user-select:none}
+.qq{font-size:15px;font-weight:600;line-height:1.55;margin-bottom:14px;color:var(--tx)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--tx);cursor:pointer;text-align:left;transition:all .15s;-webkit-appearance:none;width:100%;line-height:1.45}
+.opt:active{transform:scale(.98)}
+.opt.cor{border-color:var(--g);background:rgba(16,185,129,.09);color:#6EE7B7}
+.opt.wrg{border-color:var(--r);background:rgba(239,68,68,.07);color:#FCA5A5}
+.opt.dim{cursor:default;opacity:.5;pointer-events:none}
+.fb{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;line-height:1.55;display:none}
+.fb.cor{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.22);color:#6EE7B7;display:block}
+.fb.wrg{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:#FCA5A5;display:block}
+.btn{border:none;border-radius:11px;padding:14px 20px;font-size:14px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;width:100%;margin-top:12px;transition:all .18s;-webkit-appearance:none;letter-spacing:.1px}
+.btn:active{transform:scale(.97)}
+.btn-v{background:var(--v);color:#fff}
+.btn-v:active{background:#6D28D9}
+.btn-a{background:var(--a);color:#0B0F1E}
+.btn-a:active{background:#D97706}
+.btn-o{background:transparent;border:1px solid var(--bd);color:var(--mx)}
+.hid{display:none!important}
+.dw{text-align:center;padding:20px 10px}
+.dem{font-size:38px;margin-bottom:10px}
+.dtitle{font-size:17px;font-weight:700;color:var(--g);margin-bottom:5px}
+.dsub{font-size:13px;color:var(--mx);margin-bottom:16px;line-height:1.5}
+#fin{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+#fin.show{display:flex}
+.fem{font-size:56px;margin-bottom:16px}
+.ftitle{font-size:26px;font-weight:700;letter-spacing:-.6px;margin-bottom:6px}
+.fsub{font-size:14px;color:var(--mx);line-height:1.65;max-width:290px;margin:0 auto 22px}
+.fscore{font-size:52px;font-weight:700;color:var(--a);line-height:1}
+.fof{font-size:13px;color:var(--mx);margin:4px 0 22px;font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:26px}
+.tag{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.22);color:var(--vl);border-radius:6px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500}
+#fab{position:fixed;bottom:22px;right:20px;width:54px;height:54px;background:var(--v);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(124,58,237,.3);z-index:100;font-size:22px;transition:transform .18s}
+#fab:active{transform:scale(.88)}
+#cp{position:fixed;bottom:0;left:0;right:0;height:72vh;background:var(--s1);border-radius:18px 18px 0 0;border-top:1px solid var(--bd);z-index:200;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
+#cp.open{transform:translateY(0)}
+.cphdr{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.cptt{font-size:15px;font-weight:700}
+.cpbadge{font-size:10px;color:var(--g);background:rgba(16,185,129,.09);border:1px solid rgba(16,185,129,.18);border-radius:5px;padding:2px 8px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+.cpclose{background:none;border:none;color:var(--mx);font-size:24px;cursor:pointer;line-height:1;padding:2px 4px}
+#msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:87%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.58;word-break:break-word}
+.msg.a{background:var(--s2);border:1px solid var(--bd);align-self:flex-start;border-bottom-left-radius:3px}
+.msg.u{background:var(--v);align-self:flex-end;border-bottom-right-radius:3px}
+.cpin{padding:10px 14px;border-top:1px solid var(--bd);display:flex;gap:8px;align-items:center}
+#ci{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 13px;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--tx);outline:none;-webkit-appearance:none}
+#ci:focus{border-color:var(--v)}
+#csend{background:var(--v);border:none;border-radius:9px;width:40px;height:40px;cursor:pointer;color:#fff;font-size:17px;flex-shrink:0;transition:transform .15s;display:flex;align-items:center;justify-content:center}
+#csend:active{transform:scale(.88)}
+.typi{display:flex;gap:4px;padding:4px 0;align-items:center}
+.typi span{width:5px;height:5px;background:var(--mx);border-radius:50%;animation:ty 1.2s ease-in-out infinite}
+.typi span:nth-child(2){animation-delay:.2s}
+.typi span:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+.vcrow{display:flex;align-items:center;gap:8px;margin-top:10px}
+#vtog{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--mx);font-family:'Space Grotesk',sans-serif;cursor:pointer;transition:all .2s}
+#vtog.on{color:var(--g);border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.06)}
+#vmic{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--mx);font-family:'Space Grotesk',sans-serif;cursor:pointer;transition:all .2s}
+#vmic.pulse{color:var(--r);border-color:rgba(239,68,68,.35);animation:mpulse 1s ease-in-out infinite}
+@keyframes mpulse{0%,100%{background:var(--s2)}50%{background:rgba(239,68,68,.08)}}
+.vhint{font-size:11px;color:var(--mx);margin-left:auto;letter-spacing:.3px}
+.vctrl{display:flex;flex-direction:column;gap:7px;margin-top:7px;padding:0 1px}
+#vsel{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--tx);font-family:'Space Grotesk',sans-serif;width:100%;outline:none;-webkit-appearance:none;appearance:none}
+.spd{display:flex;gap:5px}
+.spd button{background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:6px 0;font-size:11px;font-weight:700;color:var(--mx);font-family:'Space Grotesk',sans-serif;cursor:pointer;flex:1;transition:all .15s;-webkit-appearance:none}
+.spd button:active{transform:scale(.95)}
+.spd button.on{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3);color:var(--vl)}
+.card.cr{background:var(--s1);border-left:3px solid var(--a)}
+.ey.r{color:var(--a)}
+.btn-r{background:linear-gradient(135deg,#F97316,var(--a));color:#0B0F1E}
+.card.cd{background:var(--s1);border-left:3px solid var(--d)}
+.ey.d{color:var(--d)}
+.qtype{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--d);margin-bottom:10px;opacity:.8}
+.btn-d{background:var(--d);color:#0B0F1E}
+.btn-d:active{opacity:.85}
+.btn-r:active{opacity:.88}
+.rtag{display:inline-block;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:var(--a);border-radius:5px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;margin:2px;font-weight:600}
+.wtag{display:inline-block;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#FCA5A5;border-radius:5px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;margin:2px;font-weight:600}
+.fin-bar{height:6px;background:var(--bd);border-radius:6px;margin:4px 0 22px;position:relative;overflow:visible;width:100%;max-width:260px;align-self:center}
+.fin-bar-fill{height:100%;background:var(--a);border-radius:6px;transition:width .8s ease}
+.fin-bar-mark{position:absolute;top:-4px;width:2px;height:14px;background:var(--g);border-radius:2px}
+.fin-bar-mark::after{content:'80%';position:absolute;top:16px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
+#cmicbtn{background:var(--s2);border:1px solid var(--bd);border-radius:9px;width:40px;height:40px;cursor:pointer;color:var(--mx);font-size:16px;flex-shrink:0;transition:transform .15s;display:flex;align-items:center;justify-content:center}
+#cmicbtn:active{transform:scale(.88)}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div class="hdr-top">
+    <div class="logo">
+      <div class="lm">&gt;_</div>
+      <div>
+        <div class="lt">PyAnchor</div>
+        <div class="ls" id="lver">Day 1 · 100 Days of Code</div>
+      </div>
+    </div>
+    <div id="sb">0 pts</div>
+  </div>
+  <div class="prow">
+    <span id="plbl">Module 1 of 5</span>
+    <span id="ppct">0%</span>
+  </div>
+  <div class="pt"><div class="pf" id="pf" style="width:0%"></div></div>
+  <div class="vcrow">
+    <button id="vtog" onclick="toggleVoice()">🔈 Voice</button>
+    <button id="vmic" class="hid" onclick="listenNow()">🎤 Speak</button>
+    <span class="vhint" id="vhint"></span>
+  </div>
+  <div class="vctrl hid" id="vctrl">
+    <select id="vsel" onchange="setVoice(this.value)" title="Choose voice"></select>
+    <div class="spd">
+      <button id="sp08" onclick="setRate(0.8)">0.8×</button>
+      <button id="sp10" onclick="setRate(1.0)" class="on">1.0×</button>
+      <button id="sp12" onclick="setRate(1.2)">1.2×</button>
+      <button id="sp15" onclick="setRate(1.5)">1.5×</button>
+    </div>
+  </div>
+  <div class="dots" id="dotrow">
+    <div class="dot act" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+    <div class="dot" id="d5"></div>
+    <div class="dot" id="d6"></div>
+    <div class="dot" id="d7"></div>
+    <div class="dot" id="d8"></div>
+  </div>
+</div>
+
+<div id="main"></div>
+
+<div id="fin"></div>
+
+<button id="fab" onclick="toggleChat()" aria-label="Ask PyAnchor AI tutor">🐍</button>
+
+<div id="cp">
+  <div class="cphdr">
+    <div class="cptt">Ask PyAnchor</div>
+    <div style="display:flex;align-items:center;gap:9px">
+      <span class="cpbadge">AI Tutor</span>
+      <button class="cpclose" onclick="toggleChat()">×</button>
+    </div>
+  </div>
+  <div id="msgs">
+    <div class="msg a">Hey! I'm your Day 1 tutor. Ask me anything about <code style="background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">print()</code>, <code style="background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">input()</code>, variables, string concatenation, or <code style="background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">\n</code>.</div>
+  </div>
+  <div class="cpin">
+    <input id="ci" type="text" placeholder="Ask anything about Day 1..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+    <button id="cmicbtn" onclick="startChatVoice()" aria-label="Speak to tutor">🎤</button>
+    <button id="csend" onclick="sendMsg()" aria-label="Send">→</button>
+  </div>
+</div>
+
+<script>
+const MODS=[
+  {
+    title:'print()',sub:'Output to the screen',
+    desc:'print() is Python\'s voice — it sends text to the screen. It is always lowercase. Python is case-sensitive, so Print() or PRINT() both throw a NameError.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cs">"Welcome to Python!"</span>)',
+      '<span class="co">Welcome to Python!</span>',
+      '&nbsp;',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">Print</span>(<span class="cs">"test"</span>)  <span class="cm"># ← FAILS — capital P</span>',
+      '<span style="color:var(--r)">NameError: name \'Print\' is not defined</span>'
+    ],
+    qs:[
+      {q:'Which line correctly prints "Hello"?',
+       opts:['Print("Hello")','print("Hello")','print(Hello)','PRINT("Hello")'],
+       ans:1,
+       why:'print() is always lowercase. Python is case-sensitive — Print, PRINT, and pRiNt all throw a NameError.'},
+      {q:'What does this output?\n\nprint("city" + "name")',
+       opts:['city name','cityname','"city" "name"','An error'],
+       ans:1,
+       why:'Quoted text is literal. "city" + "name" outputs cityname — no space, no quotes in the result.'}
+    ]
+  },
+  {
+    title:'input()',sub:'Collect user input',
+    desc:'input() pauses your program and waits for the user to type. Whatever they type comes back as a string. Store it in a variable on the left side of =.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">city</span> = <span class="cf">input</span>(<span class="cs">"Where are you from? "</span>)',
+      '<span class="co">Where are you from? Miami</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cn">city</span>)',
+      '<span class="co">Miami</span>'
+    ],
+    qs:[
+      {q:'Which is the correct syntax?',
+       opts:['name = input("What\'s your name?")','input("What\'s your name?") = name','name == input("What\'s your name?")','Input("What\'s your name?") = name'],
+       ans:0,
+       why:'Variable = input("question"). Variable on the left, input() on the right. You cannot assign TO a function call.'},
+      {q:'A user types "Miami" when prompted. Where does it go?',
+       opts:['Inside the input() function','Into the variable on the left of =','It prints to the screen automatically','Nowhere — it\'s lost'],
+       ans:1,
+       why:'The = operator captures whatever input() returns and stores it in the variable on the left.'}
+    ]
+  },
+  {
+    title:'Variables',sub:'Store and name data',
+    desc:'A variable is a named container. You store a value once and use that name anywhere in your code. Name it what it actually holds — not x, not var1.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">city</span> = <span class="cs">"Nashville"</span>   <span class="cm"># stores "Nashville"</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">pet</span>  = <span class="cs">"Buddy"</span>      <span class="cm"># stores "Buddy"</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cn">city</span>)',
+      '<span class="co">Nashville</span>'
+    ],
+    qs:[
+      {q:'Which variable name follows Python best practice?',
+       opts:['x','var1','city','CITY'],
+       ans:2,
+       why:'"city" is descriptive and lowercase. x and var1 say nothing about what is stored. CITY-style is reserved for constants.'},
+      {q:'What does this do?\n\ncity = "Palm Beach"',
+       opts:['Prints "Palm Beach" to the screen','Asks the user to type Palm Beach','Stores the string "Palm Beach" in a variable named city','Compares city to "Palm Beach"'],
+       ans:2,
+       why:'= is the assignment operator. It stores the value on the right into the name on the left.'}
+    ]
+  },
+  {
+    title:'String concat',sub:'Join strings with +',
+    desc:'Use + to join strings together. Variables and literal strings can both be combined. A space " " is just a string too — add it between words or you get no gap.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">city</span> = <span class="cs">"Nashville"</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">pet</span>  = <span class="cs">"Buddy"</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cn">city</span> + <span class="cs">" "</span> + <span class="cn">pet</span>)',
+      '<span class="co">Nashville Buddy</span>'
+    ],
+    qs:[
+      {q:'What does this output?\n\nprint("Hello" + " " + "World")',
+       opts:['Hello World','HelloWorld','"Hello" " " "World"','An error'],
+       ans:0,
+       why:'The " " string acts as the space separator. Hello + [space] + World = Hello World.'},
+      {q:'city = "Palm"  and  name = "Beach"\n\nWhat does print(city + name) output?',
+       opts:['Palm Beach','PalmBeach','city + name','An error'],
+       ans:1,
+       why:'No quotes = use the variable\'s value. But city + name has no space between them → PalmBeach. You need + " " + to add the space.'}
+    ]
+  },
+  {
+    title:'\\n Newline',sub:'Drop the cursor one line',
+    desc:'\\n is an escape character. Inside a string it moves the cursor to the next line. It is invisible in output — it is an instruction, not text. Put it at the END of input() prompts.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">city</span> = <span class="cf">input</span>(<span class="cs">"Where are you from?\\n"</span>)',
+      '<span class="co">Where are you from?</span>',
+      '<span class="co">▌</span>   <span class="cm"># cursor on a new line</span>'
+    ],
+    qs:[
+      {q:'What does \\n do inside a string?',
+       opts:['Prints the characters \\n','Moves the cursor to a new line','Adds a space','Ends the program'],
+       ans:1,
+       why:'\\n is a newline escape character — an invisible instruction that moves the cursor down one line. Never visible in the output.'},
+      {q:'Which puts the cursor on a new line AFTER the question?',
+       opts:['input("What\'s your name?")','input("What\'s your name?\\n")','input("\\nWhat\'s your name?")','input("What\'s your name?\\\\n")'],
+       ans:1,
+       why:'\\n at the END of the string drops the cursor after the question is shown, before the user types — so they type on the line below.'}
+    ]
+  },
+  {
+    title:'len()',sub:'Measure string length',
+    desc:'len() returns the number of characters in a string. Pass it a variable or a literal string. It counts every character — letters, spaces, punctuation. The result is a number.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cf">len</span>(<span class="cs">"Hello"</span>))',
+      '<span class="co">5</span>',
+      '&nbsp;',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cn">name</span> = <span class="cf">input</span>(<span class="cs">"Name: "</span>)',
+      '<span class="co">Name: Shawn</span>',
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cf">len</span>(<span class="cn">name</span>))',
+      '<span class="co">5</span>'
+    ],
+    qs:[
+      {q:'What does len("Hello") return?',
+       opts:['"Hello"','5','Hello','1'],
+       ans:1,
+       why:'len() counts every character. H-e-l-l-o = 5. It returns a number, not the string.'},
+      {q:'A user types "Miami". What does this output?\n\nname = input("City: ")\nprint(len(name))',
+       opts:['Miami','name','5','len(Miami)'],
+       ans:2,
+       why:'len(name) counts the characters in "Miami" = 5. It returns the number 5, not the word Miami.'}
+    ]
+  },
+  {
+    title:'Comments #',sub:'Annotate and disable code',
+    desc:'A comment starts with #. Python ignores everything after # on that line. Use comments to explain what your code does, or to temporarily disable a line. Shortcut: Cmd+/ on Mac, Ctrl+/ on Windows.',
+    code:[
+      '<span class="cm"># This is a comment — Python ignores it</span>',
+      '<span class="cn">name</span> = <span class="cf">input</span>(<span class="cs">"Name: "</span>)  <span class="cm"># store the input</span>',
+      '<span class="cm"># print(name)   ← disabled, won\'t run</span>',
+      '<span class="cf">print</span>(<span class="cf">len</span>(<span class="cn">name</span>))  <span class="cm"># prints character count</span>'
+    ],
+    qs:[
+      {q:'What does Python do with a line that starts with #?',
+       opts:['Prints it to the screen','Ignores it completely','Throws a SyntaxError','Runs it in debug mode'],
+       ans:1,
+       why:'# marks a comment. Python skips the entire line — it never executes.'},
+      {q:'Which is a valid Python comment?',
+       opts:['// This is a comment','/* comment */','# This is a comment','-- comment'],
+       ans:2,
+       why:'Python uses # for comments. // and /* */ come from JavaScript/Java. -- is SQL. Only # works in Python.'}
+    ]
+  },
+  {
+    title:'Debugging',sub:'Read and fix common errors',
+    desc:'Python tells you exactly what went wrong and on which line. SyntaxError = code Python cannot parse (missing quote, wrong case). IndentationError = unexpected spaces before a line outside a function or loop.',
+    code:[
+      '<span class="pr">&gt;&gt;&gt; </span><span class="cf">print</span>(<span class="cs">"hello)</span>  <span class="cm"># missing closing quote</span>',
+      '<span style="color:var(--r)">SyntaxError: EOL while scanning string literal</span>',
+      '&nbsp;',
+      '<span class="pr">&gt;&gt;&gt; </span>&nbsp;&nbsp;<span class="cf">print</span>(<span class="cs">"hello"</span>)  <span class="cm"># unexpected space</span>',
+      '<span style="color:var(--r)">IndentationError: unexpected indent</span>'
+    ],
+    qs:[
+      {q:'What error does this cause?\n\nprint("hello)',
+       opts:['IndentationError','NameError','SyntaxError','RuntimeError'],
+       ans:2,
+       why:'The closing quote is missing — Python cannot parse the string. SyntaxError. The IDE shows a red underline.'},
+      {q:'Which line causes an IndentationError?',
+       opts:['print("hello")','Print("hello")','  print("hello")','print(hello)'],
+       ans:2,
+       why:'The two spaces before print are unexpected. Outside of loops or functions, lines must start at column zero. Python uses indentation as meaningful syntax.'}
+    ]
+  }
+];
+
+const CHALLENGE={
+  qs:[
+    {q:'LINE 1 — Print the greeting',
+     opts:['Print("Welcome to the Band Name Generator.")','print("Welcome to the Band Name Generator.")','print(Welcome to the Band Name Generator.)','input("Welcome to the Band Name Generator.")'],
+     ans:1,
+     why:'print() lowercase, string in quotes. Greeting complete.'},
+    {q:'LINE 2 — Ask for and store the city',
+     opts:['city = Print("What city are you from?\\n")','input("What city are you from?\\n") = city','city = input("What city are you from?\\n")','city = input(What city are you from?)'],
+     ans:2,
+     why:'variable = input("question\\n"). Variable left, input() right, \\n for the new line. Pattern locked.'},
+    {q:'LINE 3 — Ask for and store the pet name',
+     opts:['name = input("What is your pet\'s name?\\n")','name = Print("What is your pet\'s name?\\n")','input("What is your pet\'s name?\\n") = name','Name = input("What is your pet\'s name?\\n")'],
+     ans:0,
+     why:'Same pattern as line 2. Lowercase variable name — Name with capital N is not convention.'},
+    {q:'LINE 4 — Print the band name with a space between',
+     opts:['print(city + name)','print("city" + " " + "name")','print(city + " " + name)','print("Band:" city name)'],
+     ans:2,
+     why:'No quotes on variables — use their values. Add " " between them for the space. Program complete.'},
+    {q:'BONUS — Debug: Which line has a SyntaxError?',
+     opts:['print("Welcome to Python!")','print("Hello World)','name = input("Name:\\n")','# this is a comment'],
+     ans:1,
+     why:'Missing closing quote on "Hello World — SyntaxError. Python cannot find where the string ends. The IDE shows a red underline.'},
+    {q:'PUZZLE — Swap without typing the words\n\nglass1 = "milk"\nglass2 = "juice"\ntemp = glass1\nglass1 = glass2\nglass2 = ___',
+     opts:['"milk"','glass1','temp','"juice"'],
+     ans:2,
+     why:'temp stored the original glass1 ("milk") before it was overwritten by glass2. Setting glass2 = temp gives it "milk" back. Classic three-step variable swap.'}
+  ]
+};
+
+const SUPPL=[
+  {qs:[
+    {q:'What does print("A"+"B"+"C") output?',opts:['A B C','A+B+C','ABC','Error'],ans:2,why:'No spaces between strings — concatenation joins them directly: ABC.'},
+    {q:'How many lines does this print?\n\nprint("Hello")\nprint("World")',opts:['One line','Two lines','Zero','Depends on IDE'],ans:1,why:'Each print() call produces one line. Two calls = two separate lines.'},
+    {q:'Which correctly prints the word Python?',opts:['print(Python)','print("Python")','Print("Python")','echo("Python")'],ans:1,why:'print() lowercase, text in quotes. print(Python) without quotes looks for a variable named Python.'}
+  ]},
+  {qs:[
+    {q:'What does input() always return?',opts:['A number','A list','A string','Nothing'],ans:2,why:'input() always returns a string — even if the user types digits.'},
+    {q:'Which stores AND prints user input in one line?',opts:['print(input("Name: "))','input(print("Name: "))','store(input("Name: "))','name = print("Name: ")'],ans:0,why:'You can nest input() inside print(). Python evaluates inside-out: runs input() first, then prints the result.'},
+    {q:'User types nothing and hits Enter. What does input() return?',opts:['None','0','An empty string ""','An error'],ans:2,why:'input() always returns a string. Empty Enter = empty string "".'}
+  ]},
+  {qs:[
+    {q:'After these lines, what does print(x) output?\n\nx = 5\nx = 10',opts:['5','10','5 and 10','Error'],ans:1,why:'Variables are mutable — each assignment replaces the previous value. x is 10.'},
+    {q:'Which is a valid variable name?',opts:['2city','my-city','my_city','print'],ans:2,why:"Names can't start with numbers, can't use hyphens, and can't shadow built-ins like print. Underscores are fine."},
+    {q:'city = "Miami"\n\nThen: print(City)\n\nWhat happens?',opts:['Prints Miami','Prints city','NameError','Prints nothing'],ans:2,why:'Python is case-sensitive. city ≠ City. City was never defined — NameError.'}
+  ]},
+  {qs:[
+    {q:'first = "South"   second = "Florida"\n\nWhich prints them with a space?',opts:['print(first second)','print(first+second)','print(first + " " + second)','print("first"+"second")'],ans:2,why:'You need the + operator and a " " string between variables to add the space.'},
+    {q:'What does print("Ha" * 3) output?',opts:['Ha Ha Ha','Ha*3','HaHaHa','Error'],ans:2,why:'Multiplying a string by a number repeats it: "Ha" * 3 = HaHaHa.'},
+    {q:'age = 25\n\nWhat happens with print("Age: " + age)?',opts:['Prints Age: 25','Prints Age: + age','TypeError','Prints nothing'],ans:2,why:"Python can't concatenate a string and an integer. You'd need str(age) to convert it first."}
+  ]},
+  {qs:[
+    {q:'What does print("Line1\\nLine2") output?',opts:['Line1\\nLine2','Line1 Line2','Line1 then Line2 on next line','Error'],ans:2,why:'\\n is a newline character. It splits output across two lines.'},
+    {q:'How many lines does print("A\\nB\\nC") produce?',opts:['One','Two','Three','Four'],ans:2,why:'Two \\n characters create two breaks: A, B, and C each on their own line = three lines.'},
+    {q:'input("Enter:\\n") vs input("\\nEnter:") — what is different?',opts:['No difference','First drops cursor AFTER prompt, second BEFORE it','First causes an error','Second drops cursor after, first before'],ans:1,why:'\\n position matters. At the end, cursor lands below the question. At the start, it adds a blank line before the prompt.'}
+  ]},
+  {qs:[
+    {q:'What does len("Hello World") return?',opts:['10','11','2','5'],ans:1,why:'"Hello World" = 11 characters. len() counts the space too.'},
+    {q:'name = "Python"\n\nWhat does print(len(name)) output?',opts:['"Python"','name','6','7'],ans:2,why:'P-y-t-h-o-n = 6 characters. len() returns the count as a number.'},
+    {q:'Which correctly prints the length of user input?',opts:['print(input(len("Name: ")))','name=input("Name: "); print(len(name))','len(input("Name: ")=name)','print(length(name))'],ans:1,why:"Store input first, then pass to len(). Python's function is len() — there's no length()."}
+  ]},
+  {qs:[
+    {q:'What does Python do with # print("hello")?',opts:['Prints hello','Throws SyntaxError','Ignores the entire line','Runs in debug mode'],ans:2,why:'# marks the line as a comment. Python skips it entirely.'},
+    {q:'Which line will Python actually execute?',opts:['# print("Hello")','  # print("Hello")','print("Hello")  # greeting','Neither'],ans:2,why:'The code before # runs. print("Hello") executes; "# greeting" is ignored.'},
+    {q:'What is the keyboard shortcut to toggle a comment?',opts:['Cmd+C / Ctrl+C','Cmd+/ or Ctrl+/','Cmd+K / Ctrl+K','Cmd+D / Ctrl+D'],ans:1,why:'Cmd+/ on Mac or Ctrl+/ on Windows adds or removes # on the selected line.'}
+  ]},
+  {qs:[
+    {q:'primt("hello") causes what error?',opts:['SyntaxError','IndentationError','NameError','RuntimeError'],ans:2,why:'"primt" is not a recognized name — Python sees it as an undefined variable. NameError.'},
+    {q:'print(\'hello\") — mismatched quotes — causes what?',opts:['Prints hello','NameError','SyntaxError','IndentationError'],ans:2,why:'Opening with a single quote and closing with a double quote is invalid syntax. SyntaxError.'},
+    {q:'What does a yellow squiggle mean (vs red)?',opts:['SyntaxError — code fails','IndentationError — fix now','Style warning (PEP 8) — code still runs','File is unsaved'],ans:2,why:'Red = actual error, code will not run. Yellow = PEP 8 style suggestion. Code runs fine.'}
+  ]}
+];
+const DEEP=[
+  {qs:[
+    {type:'predict',q:'What does this code output?\n\nprint("Hello")\nprint("World")',opts:['Hello World','Hello\nWorld (two lines)','"Hello"\n"World"','Error'],ans:1,why:'Each print() call outputs one line. Two separate calls = two separate lines: Hello on line 1, World on line 2.'},
+    {type:'faded',q:'Complete the code to print "Python is fun":\n\n___("Python is fun")',opts:['input','Print','print','echo'],ans:2,why:'print() — always lowercase — is the function that sends text to the screen. Print (capital P) causes a NameError.'},
+    {type:'debug',q:'Find the error:\n\nPrint("Good morning")',opts:['String needs single quotes','Print should be lowercase: print','Missing semicolon','Parentheses should be brackets'],ans:1,why:'Python is case-sensitive. Print (capital P) is not a recognized function — use print (lowercase).'}
+  ]},
+  {qs:[
+    {type:'predict',q:'A user types "Jordan"\n\nWhat does this output?\n\nname = input("Name: ")\nprint("Hi " + name)',opts:['Hi name','Hi Jordan','name = Jordan','Hi + Jordan'],ans:1,why:'input() stores "Jordan" in name. print() concatenates "Hi " + "Jordan" = Hi Jordan.'},
+    {type:'faded',q:'Complete the code to store user input:\n\ncity = ___("Where from? ")',opts:['print','store','get','input'],ans:3,why:'input() pauses execution and returns whatever the user types. That return value gets stored in city.'},
+    {type:'debug',q:'Find the error:\n\ninput("Your name: ") = name',opts:['input() needs \\n at end','Assignment is backwards — variable must be LEFT of =','input should be Input','Missing quotes around name'],ans:1,why:'You cannot assign TO a function call. The pattern is always: variable = input("question")'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What does this output?\n\ncity = "Miami"\ncity = "Tampa"\nprint(city)',opts:['Miami','Tampa','Miami\nTampa','Error'],ans:1,why:'Variables are mutable. The second assignment overwrites the first. When print runs, city holds "Tampa".'},
+    {type:'faded',q:'Complete the code to store a city:\n\n___ = "Nashville"',opts:['"city"','city()','var city','city'],ans:3,why:'Variable names are plain words — no quotes, no parentheses, no keyword. Just: city = "Nashville"'},
+    {type:'debug',q:'Find the error:\n\nCity = "Miami"\nprint(city)',opts:['"Miami" needs quotes','print should be Print','City ≠ city — Python is case-sensitive','Missing semicolon'],ans:2,why:'City (capital C) and city (lowercase c) are two different names. city was never defined — NameError.'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What does this output?\n\nfirst = "Palm"\nlast = "Beach"\nprint(first + last)',opts:['Palm Beach','PalmBeach','first + last','Error'],ans:1,why:'No space string between variables — concatenation gives PalmBeach. You need + " " + to add the space.'},
+    {type:'faded',q:'Complete the code to print "Miami Buddy" with a space:\n\nprint(city ___ " " ___ pet)',opts:['& , &','+ , +',', ,','. .'],ans:1,why:'+ is Python's concatenation operator. city + " " + pet joins the values with a space between them.'},
+    {type:'debug',q:'Find the error:\n\nprint("city" + " " + "pet")',opts:['Missing + between strings','"city" and "pet" are quoted — prints literally, not variable values','Should use , not +','print is wrong case'],ans:1,why:'Quotes make text literal. "city" outputs the word city, not the variable's value. Remove quotes: print(city + " " + pet)'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What does this output?\n\nprint("Name:\\nAge:")',opts:['Name:\\nAge:','Name: Age:','Name: on line 1, Age: on line 2','Error'],ans:2,why:'\\n is a newline instruction — invisible in output. The string splits into two lines: Name: and Age:'},
+    {type:'faded',q:'Complete the prompt so cursor appears on the NEXT line:\n\nname = input("Enter name:___")',opts:['" "','"\\t"','"\\n"','"-"'],ans:2,why:'\\n at the end of the string creates a newline, dropping the cursor below the prompt before the user types.'},
+    {type:'debug',q:'Find the error:\n\ncity = input("\\nWhere from?")',opts:['input needs capital I','\\n is invalid in input()','\\n is at the START — cursor drops before prompt, not after','Missing closing paren'],ans:2,why:'\\n should be at the END: "Where from?\\n" — this drops the cursor BELOW the question, not before it.'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What does this output?\n\nword = "Python"\nprint(len(word))',opts:['"Python"','word','6','7'],ans:2,why:'P-y-t-h-o-n = 6 characters. len() returns the count as a number, not the string itself.'},
+    {type:'faded',q:'Complete the code to print character count:\n\nname = "Shawn"\nprint(___(name))',opts:['size','count','length','len'],ans:3,why:'Python's built-in for character count is len() — not length(), size(), or count(). Those cause NameError.'},
+    {type:'debug',q:'Find the error:\n\nname = "Python"\nprint(length(name))',opts:['name needs quotes in print','length() is not Python — use len()','print should be Print','Missing \\n at end'],ans:1,why:'Python uses len(), not length(). length() is from other languages — calling it throws a NameError.'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What does this output?\n\n# print("Hello")\nprint("World")',opts:['Hello\nWorld','Hello','World','# print("Hello")\nWorld'],ans:2,why:'# marks the first line as a comment — Python skips it entirely. Only print("World") runs.'},
+    {type:'faded',q:'Complete the comment:\n\n___ this stores the city\ncity = input("City: ")',opts:['//','--','##','#'],ans:3,why:'Python comments use # — not // (JavaScript/Java) or -- (SQL). A single hash is all you need.'},
+    {type:'debug',q:'Find the error:\n\n// This greets the user\nprint("Hello!")',opts:['print should be Print','// is not valid Python — use #','Missing quotes around Hello!','Needs a semicolon'],ans:1,why:'// is JavaScript/C syntax. Python comments start with #. Change // to # and it works fine.'}
+  ]},
+  {qs:[
+    {type:'predict',q:'What error does this cause?\n\nprnt("hello")',opts:['SyntaxError','IndentationError','NameError','No error'],ans:2,why:'"prnt" is not a recognized Python name — it was never defined. NameError. IDE shows red underline.'},
+    {type:'faded',q:'This has a SyntaxError. What is missing?\n\nprint("Hello World)',opts:['A second print statement','The closing quote after World','A # comment above it','A \\n at the end'],ans:1,why:'The string opens with " but never closes. Python cannot find the end of the string — SyntaxError.'},
+    {type:'debug',q:'Find the error:\n\n  print("Hello")',opts:['Hello needs capital H','print should be Print','Unexpected indent — spaces before print = IndentationError','Missing quotes'],ans:2,why:'Two spaces before print are unexpected. Outside functions/loops, code must start at column zero. IndentationError.'}
+  ]}
+];
+
+// ── ANSWER OPTION SHUFFLING ────────────────────────────────────────────────
+// buildOpts: shuffles answer choices, updates currentAns, returns HTML string
+function buildOpts(q, handlerName){
+  const idxs=[0,1,2,3].sort(()=>Math.random()-.5);
+  currentAns=idxs.indexOf(q.ans);
+  return idxs.map((oi,i)=>`<button class="opt" onclick="${handlerName}(${i})">${esc(q.opts[oi])}</button>`).join('');
+}
+
+let phase='concept',modIdx=0,qIdx=0,score=0,answered=false,chatHistory=[];
+let wrongCounts={},suppIdx=0,reinforced=[],isSuppl=false;
+let drillMode=false,drillQueue=[],drillQueuePos=0;
+let suppWrong=0,deepIdx=0,currentAns=0;
+const PTS=10,TOTAL=220,PASS_SCORE=176,VERSION='v1.5';
+document.getElementById('lver').textContent='Day 1 · 100 Days · '+VERSION;
+
+// ===== VOICE ENGINE =====
+let voiceOn=false,listening=false,speechRate=1.0;
+const synth=window.speechSynthesis;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let bestVoice=null;
+
+function loadVoices(){
+  const vs=synth.getVoices();if(!vs.length)return;
+  const enVoices=vs.filter(v=>v.lang.startsWith('en'));
+  const pick=['Google US English','Samantha','Karen','Moira','Tessa','Google UK English Female'];
+  for(const name of pick){const v=vs.find(v=>v.name===name);if(v){bestVoice=v;break;}}
+  if(!bestVoice)bestVoice=enVoices[0]||vs[0];
+  const sel=document.getElementById('vsel');
+  if(!sel)return;
+  sel.innerHTML='';
+  enVoices.forEach(v=>{
+    const o=document.createElement('option');
+    o.value=v.name;o.textContent=v.name+(v.default?' (default)':'');
+    if(v===bestVoice)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+if(synth.getVoices().length)loadVoices();
+synth.addEventListener('voiceschanged',loadVoices);
+
+function setVoice(name){
+  const vs=synth.getVoices();
+  bestVoice=vs.find(v=>v.name===name)||bestVoice;
+  speak("Got it, switching to this voice now. How does this sound?");
+}
+
+function setRate(r){
+  speechRate=r;
+  document.querySelectorAll('.spd button').forEach(b=>b.classList.remove('on'));
+  const id='sp'+String(r).replace('.','');
+  const btn=document.getElementById(id);if(btn)btn.classList.add('on');
+  speak("Speed adjusted. Does this feel better?");
+}
+
+function toggleVoice(){
+  voiceOn=!voiceOn;
+  const btn=document.getElementById('vtog');
+  const mic=document.getElementById('vmic');
+  const hint=document.getElementById('vhint');
+  const ctrl=document.getElementById('vctrl');
+  if(voiceOn){
+    btn.textContent='🔊 Voice On';btn.classList.add('on');
+    mic.classList.remove('hid');ctrl.classList.remove('hid');
+    hint.textContent='Say A · B · C · D';
+    loadVoices();
+    speak("Voice mode is on. I'll read everything out loud. Use the voice picker and speed buttons to dial it in. Say A, B, C, or D to answer.");
+  }else{
+    btn.textContent='🔈 Voice';btn.classList.remove('on');
+    mic.classList.add('hid');ctrl.classList.add('hid');hint.textContent='';
+    synth.cancel();listening=false;setMicUI(false);
+  }
+}
+
+function stripHtml(h){return h.replace(/<[^>]*>/g,'').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();}
+
+function speak(text,cb){
+  if(!voiceOn)return;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  if(bestVoice)u.voice=bestVoice;
+  u.rate=speechRate;u.pitch=1.04;u.volume=1;
+  if(cb)u.onend=()=>{setTimeout(cb,150);};
+  setTimeout(()=>synth.speak(u),60);
+}
+
+function readConcept(mod){
+  speak('Alright, module '+stripHtml(mod.title)+'. '+mod.sub+'. '+stripHtml(mod.desc)+' Take a look at the code example. When you\'re ready, tap Test It, or just say go.');
+}
+
+function readQuestion(q){
+  const labels=['A','B','C','D'];
+  const optsText=q.opts.map((o,i)=>labels[i]+'. '+stripHtml(o)).join('. ');
+  const clean=stripHtml(q.q).replace(/\n/g,' — ');
+  speak('Here\'s the question. '+clean+'. Your choices are: '+optsText+'. Go ahead and say A, B, C, or D.',
+    ()=>{if(voiceOn&&!answered)startListening();});
+}
+
+function startListening(){
+  if(!SR||listening||answered)return;
+  listening=true;setMicUI(true);
+  const r=new SR();
+  r.lang='en-US';r.continuous=false;r.interimResults=false;r.maxAlternatives=3;
+  r.onresult=e=>{
+    listening=false;setMicUI(false);
+    for(let i=0;i<e.results[0].length;i++){
+      const t=e.results[0][i].transcript.toLowerCase().trim();
+      if(handleVoiceCmd(t))return;
+    }
+    speak("Hmm, I didn't catch that. Try saying just the letter — A, B, C, or D.",()=>startListening());
+  };
+  r.onerror=e=>{
+    listening=false;setMicUI(false);
+    if(e.error==='no-speech')speak("Still here when you're ready. Say A, B, C, or D.",()=>startListening());
+    else if(e.error==='not-allowed')speak('Microphone access was blocked. You can still tap your answer below.');
+    else speak("Something went wrong with the mic. Tap your answer or try again.",()=>{});
+  };
+  r.onend=()=>{listening=false;setMicUI(false);};
+  try{r.start();}catch(e){listening=false;setMicUI(false);}
+}
+
+function setMicUI(active){
+  const btn=document.getElementById('vmic');if(!btn)return;
+  if(active){btn.textContent='🔴 Listening...';btn.classList.add('pulse');}
+  else{btn.textContent='🎤 Speak';btn.classList.remove('pulse');}
+}
+
+function handleVoiceCmd(t){
+  const map={a:0,one:0,'1':0,b:1,two:1,'2':1,c:2,three:2,'3':2,d:3,four:3,'4':3};
+  const found=Object.keys(map).find(k=>new RegExp('\\b'+k+'\\b','i').test(t));
+  if(found!==undefined){
+    if(phase==='question'&&!answered){answer(map[found]);return true;}
+    if(phase==='challenge_q'&&!answered){ansC(map[found]);return true;}
+  }
+  if(/\b(continue|next|done|move on|go on)\b/.test(t)){
+    const nb=document.getElementById('nb');
+    if(nb&&!nb.classList.contains('hid')){
+      if(phase==='question'){nxt();return true;}
+      if(phase==='challenge_q'){nxtC();return true;}
+      if(phase==='mod_done'){nxtMod();return true;}
+    }
+  }
+  if(/\b(start|go|begin|ready|test it)\b/.test(t)){
+    if(phase==='concept'){startQuiz();return true;}
+    if(phase==='challenge_intro'){startC();return true;}
+  }
+  return false;
+}
+
+function listenNow(){if(voiceOn)startListening();}
+
+function startChatVoice(){
+  if(!SR)return;
+  const r=new SR();r.lang='en-US';r.continuous=false;r.maxAlternatives=1;
+  r.onresult=e=>{document.getElementById('ci').value=e.results[0][0].transcript;};
+  try{r.start();}catch(e){}
+}
+
+function up(){
+  if(drillMode){
+    const pct=Math.round((drillQueuePos/drillQueue.length)*100);
+    document.getElementById('pf').style.width=pct+'%';
+    document.getElementById('plbl').textContent='⚡ Drilling: '+MODS[modIdx].title;
+    document.getElementById('ppct').textContent=(drillQueuePos+1)+' / '+drillQueue.length;
+    document.getElementById('sb').textContent=score+' pts';
+    for(let i=0;i<=MODS.length;i++){
+      const d=document.getElementById('d'+i);if(!d)continue;
+      d.className='dot';
+      const qi=drillQueue.indexOf(i);
+      if(qi!==-1){if(qi<drillQueuePos)d.classList.add('dn');else if(qi===drillQueuePos)d.classList.add('act');}
+    }
+    return;
+  }
+  const done=(['challenge_intro','challenge_q','challenge_done','all_done'].includes(phase))?MODS.length:modIdx;
+  const pct=Math.round((done/(MODS.length+1))*100);
+  document.getElementById('pf').style.width=pct+'%';
+  const inSuppl=phase==='supp_q'||phase==='supp_done';
+  document.getElementById('plbl').textContent=done<MODS.length?(inSuppl?'⚡ Reinforcing: ':''+'Module '+(modIdx+1)+' of '+MODS.length):'Final Challenge';
+  document.getElementById('ppct').textContent=pct+'%';
+  document.getElementById('sb').textContent=score+' pts';
+  for(let i=0;i<=MODS.length;i++){
+    const d=document.getElementById('d'+i);if(!d)continue;
+    d.className='dot';
+    if(i<done)d.classList.add('dn');
+    else if(i===done&&phase!=='all_done')d.classList.add('act');
+  }
+}
+
+  else if(phase==='deep_q'){
+    const q=DEEP[modIdx].qs[deepIdx];
+    const qt=q.q.replace(/\n/g,'<br>');
+    const typeLabel=q.type==='predict'?'🔮 Predict the Output':q.type==='faded'?'✏️ Fill in the Blank':'🐛 Find the Bug';
+    m.innerHTML=`
+      <div class="card cd">
+        <div class="ey d">⚡⚡ DEEP DRILL ${deepIdx+1} OF 3 · ${MODS[modIdx].title}</div>
+        <div class="qtype">${typeLabel}</div>
+        <div class="qq">${qt}</div>
+        <div class="opts" id="opts">${buildOpts(q,'ansDeep')}</div>
+        <div class="fb" id="fb"></div>
+        <button class="btn btn-d hid" id="nb" onclick="nxtDeep()">Continue →</button>
+      </div>`;
+    setTimeout(()=>readQuestion(q),200);
+  }
+
+function chtml(lines){return lines.join('<br>');}
+
+function render(){
+  const m=document.getElementById('main');
+  m.innerHTML='';up();
+  if(phase==='concept'){
+    const mod=MODS[modIdx];
+    m.innerHTML=`
+      <div class="card cv">
+        <div class="ey v">MODULE ${modIdx+1} OF ${MODS.length}</div>
+        <div class="ctitle"><span class="pr">&gt;&gt;&gt; </span>${mod.title}<span class="cur"></span></div>
+        <div class="csubt">${mod.sub}</div>
+        <div class="cdesc">${mod.desc}</div>
+        <div class="cb">${chtml(mod.code)}</div>
+      </div>
+      <button class="btn btn-v" onclick="startQuiz()">Test it →</button>`;
+    setTimeout(()=>readConcept(mod),200);
+  }
+  else if(phase==='question'){
+    const q=MODS[modIdx].qs[qIdx];
+    const qt=q.q.replace(/\n/g,'<br>');
+    m.innerHTML=`
+      <div class="card cv">
+        <div class="ey v">QUESTION ${qIdx+1} OF 2 · ${MODS[modIdx].title}</div>
+        <div class="qq">${qt}</div>
+        <div class="opts" id="opts">${buildOpts(q,'answer')}</div>
+        <div class="fb" id="fb"></div>
+        <button class="btn btn-v hid" id="nb" onclick="nxt()">Continue →</button>
+      </div>`;
+    setTimeout(()=>readQuestion(q),200);
+  }
+  else if(phase==='mod_done'){
+    const nxt_=modIdx+1<MODS.length?'Next: '+MODS[modIdx+1].title:'Final Challenge';
+    const missed=wrongCounts[modIdx]||0;
+    if(missed>0){
+      m.innerHTML=`
+        <div class="card cr">
+          <div class="ey r">⚡ REINFORCE BEFORE MOVING ON</div>
+          <div class="ctitle" style="font-family:'Space Grotesk',sans-serif;font-size:19px;margin-bottom:4px">${MODS[modIdx].title}</div>
+          <div class="csubt">You missed ${missed} question${missed>1?'s':''} here.</div>
+          <div class="cdesc" style="margin-bottom:16px">3 more questions will drill this from a different angle. Takes about 90 seconds.</div>
+          <button class="btn btn-r" onclick="startSuppl()">Reinforce Now ⚡</button>
+          <button class="btn btn-o" style="margin-top:8px;font-size:13px" onclick="nxtMod()">Skip for now →</button>
+        </div>`;
+      speak("You missed "+missed+" in "+MODS[modIdx].title+". I've got 3 more questions to help lock it in. Say reinforce or tap the button. Or say skip to move on.");
+    }else{
+      m.innerHTML=`
+        <div class="card cg">
+          <div class="dw">
+            <div class="dem">✓</div>
+            <div class="dtitle">${MODS[modIdx].title} locked in</div>
+            <div class="dsub">+${PTS*2} pts · ${nxt_} coming up</div>
+            <button class="btn btn-v" onclick="nxtMod()">${modIdx+1<MODS.length?'Next Module →':'Final Challenge →'}</button>
+          </div>
+        </div>`;
+      speak('Nice work — '+MODS[modIdx].title+' is locked in. '+(modIdx+1<MODS.length?'Coming up next: '+MODS[modIdx+1].title+'. Say continue whenever you\'re ready.':'The final challenge is up next. Say continue when you\'re ready.'));
+    }
+  }
+  else if(phase==='supp_q'){
+    const q=SUPPL[modIdx].qs[suppIdx];
+    const qt=q.q.replace(/\n/g,'<br>');
+    m.innerHTML=`
+      <div class="card cr">
+        <div class="ey r">⚡ REINFORCEMENT ${suppIdx+1} OF 3 · ${MODS[modIdx].title}</div>
+        <div class="qq">${qt}</div>
+        <div class="opts" id="opts">${buildOpts(q,'ansSuppl')}</div>
+        <div class="fb" id="fb"></div>
+        <button class="btn btn-r hid" id="nb" onclick="nxtSuppl()">Continue →</button>
+      </div>`;
+    setTimeout(()=>readQuestion(q),200);
+  }
+  else if(phase==='supp_done'){
+    m.innerHTML=`
+      <div class="card cg">
+        <div class="dw">
+          <div class="dem">⚡</div>
+          <div class="dtitle">${MODS[modIdx].title} — Anchored ✓</div>
+          <div class="dsub">Reinforced + deep drilled. ${modIdx+1<MODS.length?'Next up: '+MODS[modIdx+1].title:' Final challenge is next.'}</div>
+          <button class="btn btn-v" onclick="nxtMod()">${modIdx+1<MODS.length?'Next Module →':'Final Challenge →'}</button>
+        </div>
+      </div>`;
+    speak("Reinforcement complete. "+MODS[modIdx].title+" is drilled. "+(modIdx+1<MODS.length?'Ready for '+MODS[modIdx+1].title+'? Say continue.':'Final challenge is up next. Say continue.'));
+  }
+  else if(phase==='challenge_intro'){
+    m.innerHTML=`
+      <div class="card ca">
+        <div class="ey a">FINAL CHALLENGE</div>
+        <div class="ctitle" style="font-family:'Space Grotesk',sans-serif;font-size:20px">Band Name Generator<span class="cur"></span></div>
+        <div class="csubt">Build it — one line at a time</div>
+        <div class="cdesc">Four questions. Each is one line of the complete program. All five Day 1 concepts in one build.</div>
+        <div class="cb">
+<span class="cf">print</span>(<span class="cs">"Welcome to the Band Name Generator."</span>)<br>
+<span class="cn">city</span> = <span class="cf">input</span>(<span class="cs">"What city are you from?\\n"</span>)<br>
+<span class="cn">name</span> = <span class="cf">input</span>(<span class="cs">"What is your pet\'s name?\\n"</span>)<br>
+<span class="cf">print</span>(<span class="cn">city</span> + <span class="cs">" "</span> + <span class="cn">name</span>)
+        </div>
+      </div>
+      <button class="btn btn-a" onclick="startC()">Start the Build →</button>`;
+    speak("Alright, this is the final challenge. You're going to build the Band Name Generator, one line at a time. Six questions total. Say go, or tap Start the Build whenever you're ready.");
+  }
+  else if(phase==='challenge_q'){
+    const q=CHALLENGE.qs[qIdx];
+    m.innerHTML=`
+      <div class="card ca">
+        <div class="ey a">LINE ${qIdx+1} OF ${CHALLENGE.qs.length} · FINAL BUILD</div>
+        <div class="qq">${esc(q.q)}</div>
+        <div class="opts" id="opts">${buildOpts(q,'ansC')}</div>
+        <div class="fb" id="fb"></div>
+        <button class="btn btn-a hid" id="nb" onclick="nxtC()">Continue →</button>
+      </div>`;
+    setTimeout(()=>readQuestion(q),200);
+  }
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+
+function startQuiz(){phase='question';qIdx=0;answered=false;render();}
+function startC(){phase='challenge_q';qIdx=0;answered=false;render();}
+
+function answer(i){
+  if(answered)return;answered=true;
+  const q=MODS[modIdx].qs[qIdx];
+  doAnswer(i,currentAns,q.why);
+}
+function ansC(i){
+  if(answered)return;answered=true;
+  const q=CHALLENGE.qs[qIdx];
+  doAnswer(i,currentAns,q.why);
+}
+function ansSuppl(i){
+  if(answered)return;answered=true;
+  const q=SUPPL[modIdx].qs[suppIdx];
+  if(i!==currentAns)suppWrong++;
+  doAnswer(i,currentAns,q.why,true);
+}
+function ansDeep(i){
+  if(answered)return;answered=true;
+  const q=DEEP[modIdx].qs[deepIdx];
+  doAnswer(i,currentAns,q.why,true);
+}
+
+function doAnswer(i,ans,why,skipTracking=false){
+  document.querySelectorAll('.opt').forEach(o=>o.classList.add('dim'));
+  const fb=document.getElementById('fb');
+  const correct=(i===ans);
+  if(correct){
+    document.querySelectorAll('.opt')[i].classList.add('cor');
+    fb.className='fb cor';fb.innerHTML='&#10003; Correct — '+why;
+    score+=PTS;document.getElementById('sb').textContent=score+' pts';
+  }else{
+    document.querySelectorAll('.opt')[i].classList.add('wrg');
+    document.querySelectorAll('.opt')[ans].classList.add('cor');
+    fb.className='fb wrg';fb.innerHTML='&#10005; '+why;
+    if(!skipTracking)wrongCounts[modIdx]=(wrongCounts[modIdx]||0)+1;
+  }
+  const nb=document.getElementById('nb');nb.classList.remove('hid');
+  speak((correct?"That's right. ":"Not quite — ")+why+(correct?' Say continue when you\'re ready.':" Take a look at the explanation, then say continue."));
+}
+
+function nxt(){
+  answered=false;
+  if(qIdx<MODS[modIdx].qs.length-1){qIdx++;phase='question';render();}
+  else{phase='mod_done';render();}
+}
+function nxtMod(){
+  if(drillMode){
+    drillQueuePos++;
+    if(drillQueuePos>=drillQueue.length){drillMode=false;showFin();}
+    else{modIdx=drillQueue[drillQueuePos];phase='concept';render();up();}
+  }else{
+    modIdx++;
+    phase=modIdx>=MODS.length?'challenge_intro':'concept';
+    render();up();
+  }
+}
+function nxtC(){
+  answered=false;
+  if(qIdx<CHALLENGE.qs.length-1){qIdx++;render();}
+  else{showFin();}
+}
+function startSuppl(){phase='supp_q';suppIdx=0;answered=false;render();}
+function nxtSuppl(){
+  answered=false;
+  if(suppIdx<SUPPL[modIdx].qs.length-1){suppIdx++;render();}
+  else{
+    if(suppWrong>0){phase='deep_q';deepIdx=0;render();}
+    else{phase='supp_done';reinforced.push(modIdx);render();}
+  }
+}
+function nxtDeep(){
+  answered=false;
+  if(deepIdx<DEEP[modIdx].qs.length-1){deepIdx++;render();}
+  else{phase='supp_done';reinforced.push(modIdx);render();}
+}
+
+function showFin(){
+  phase='all_done';
+  document.getElementById('main').classList.add('hid');
+  document.getElementById('hdr').classList.add('hid');
+  document.getElementById('fab').classList.add('hid');
+  const f=document.getElementById('fin');
+  const passed=(score>=PASS_SCORE);
+  const pct=Math.round((score/TOTAL)*100);
+  const weakMods=Object.keys(wrongCounts).filter(k=>wrongCounts[k]>0).map(Number);
+  const barPct=Math.min(pct,100);
+  const markPct=Math.round((PASS_SCORE/TOTAL)*100);
+
+  if(passed){
+    const rHtml=reinforced.length>0
+      ?'<div style="font-size:12px;color:var(--mx);margin-bottom:6px">Reinforced this session:</div>'+reinforced.map(i=>`<span class="rtag">⚡ ${MODS[i].title}</span>`).join('')
+      :'';
+    f.innerHTML=`
+      <div class="fem">⚓</div>
+      <div class="ftitle">Day 1 Anchored.</div>
+      <div class="fsub">Every concept locked in. Eight modules, the Band Name Generator, the debug, and the variable swap — all done.</div>
+      <div class="fscore">${score}</div>
+      <div class="fof">out of ${TOTAL} pts · ${pct}%</div>
+      <div class="tags" style="justify-content:center;margin-bottom:${rHtml?'12':'24'}px">
+        <span class="tag">print()</span><span class="tag">input()</span>
+        <span class="tag">variables</span><span class="tag">str + str</span>
+        <span class="tag">\\n</span><span class="tag">len()</span>
+        <span class="tag"># comments</span><span class="tag">debugging</span>
+      </div>
+      ${rHtml?`<div style="text-align:center;margin-bottom:20px">${rHtml}</div>`:''}
+      <button class="btn btn-o" style="max-width:200px;font-size:13px" onclick="restart()">Run it again ↺</button>`;
+    speak("Day 1 anchored. You scored "+score+" out of "+TOTAL+" — "+pct+" percent. Solid work.");
+  }else{
+    const gap=PASS_SCORE-score;
+    const weakHtml=weakMods.length>0
+      ?weakMods.map(i=>`<span class="wtag">${MODS[i].title}</span>`).join('')
+      :'<span style="font-size:12px;color:var(--mx)">All concepts were close — full reset recommended.</span>';
+    f.innerHTML=`
+      <div class="fem">📌</div>
+      <div class="ftitle" style="color:var(--a)">Not Yet Anchored</div>
+      <div class="fsub">You need 80% to anchor Day 1. You're ${gap} point${gap!==1?'s':''} away — drill the weak spots and you'll clear it.</div>
+      <div class="fscore" style="color:var(--a)">${score}</div>
+      <div class="fof">out of ${TOTAL} pts · ${pct}% · Pass at ${PASS_SCORE}</div>
+      <div class="fin-bar">
+        <div class="fin-bar-fill" style="width:${barPct}%"></div>
+        <div class="fin-bar-mark" style="left:${markPct}%"></div>
+      </div>
+      <div style="text-align:center;margin-bottom:8px;font-size:11px;color:var(--mx);font-weight:600;letter-spacing:.8px;text-transform:uppercase">Weak Spots</div>
+      <div style="text-align:center;margin-bottom:24px">${weakHtml}</div>
+      <button class="btn btn-r" style="max-width:280px;margin-bottom:10px" onclick="startTargetedRetry(${JSON.stringify(weakMods)})">⚡ Drill Weak Spots${weakMods.length?' ('+weakMods.length+')':''}</button>
+      <button class="btn btn-o" style="max-width:200px;font-size:13px" onclick="restart()">Full Reset ↺</button>`;
+    speak("You scored "+score+" out of "+TOTAL+", "+pct+" percent. You need "+PASS_SCORE+" to pass — that's "+gap+" more point"+(gap!==1?"s":"")+" away. "+(weakMods.length>0?"Your weak spots are: "+weakMods.map(i=>MODS[i].title).join(', ')+". Tap Drill Weak Spots to target just those modules.":"Tap Full Reset to start fresh."));
+  }
+  f.classList.add('show');
+}
+
+function startTargetedRetry(weakMods){
+  if(!weakMods||!weakMods.length){restart();return;}
+  drillMode=true;drillQueue=[...weakMods];drillQueuePos=0;
+  weakMods.forEach(i=>{delete wrongCounts[i];});
+  modIdx=drillQueue[0];phase='concept';qIdx=0;answered=false;
+  document.getElementById('fin').classList.remove('show');
+  document.getElementById('main').classList.remove('hid');
+  document.getElementById('hdr').classList.remove('hid');
+  document.getElementById('fab').classList.remove('hid');
+  render();up();
+  speak("Drilling "+drillQueue.length+" weak spot"+(drillQueue.length!==1?"s":"")+": "+drillQueue.map(i=>MODS[i].title).join(', ')+". Let's go.");
+}
+
+function restart(){
+  phase='concept';modIdx=0;qIdx=0;score=0;answered=false;chatHistory=[];
+  wrongCounts={};suppIdx=0;reinforced=[];
+  drillMode=false;drillQueue=[];drillQueuePos=0;
+  suppWrong=0;deepIdx=0;currentAns=0;
+  document.getElementById('main').classList.remove('hid');
+  document.getElementById('hdr').classList.remove('hid');
+  document.getElementById('fab').classList.remove('hid');
+  document.getElementById('fin').classList.remove('show');
+  render();up();
+}
+
+let chatOpen=false;
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('cp').classList.toggle('open',chatOpen);
+  if(chatOpen)setTimeout(()=>document.getElementById('ci').focus(),320);
+}
+document.getElementById('ci').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
+
+async function sendMsg(){
+  const inp=document.getElementById('ci');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';
+  addMsg(text,'u');
+  chatHistory.push({role:'user',content:text});
+  const tid=addTyping();
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system:`You are PyAnchor, an expert Python tutor focused exclusively on Day 1 of Angela Yu's 100 Days of Code course. You help learners master: print(), input(), variables, string concatenation (+), and the \\n newline escape character.
+
+RULES:
+- Keep answers SHORT (2-4 sentences max) — the learner is on mobile
+- Always show a code example in plain text (no markdown code blocks, no backticks)
+- Be direct and encouraging
+- If asked about anything beyond Day 1 concepts, say: "That's a future day! Let's lock in Day 1 first."
+- Never use markdown formatting — plain text only`,
+        messages:chatHistory
+      })
+    });
+    removeTyping(tid);
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    const reply=d.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    addMsg(reply,'a');
+    chatHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    removeTyping(tid);
+    addMsg('Connection error — try again.','a');
+    chatHistory.pop();
+  }
+}
+
+function addMsg(text,role){
+  const msgs=document.getElementById('msgs');
+  const d=document.createElement('div');
+  d.className='msg '+role;d.textContent=text;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function addTyping(){
+  const msgs=document.getElementById('msgs');
+  const id='ty'+Date.now();
+  const d=document.createElement('div');
+  d.className='msg a';d.id=id;
+  d.innerHTML='<div class="typi"><span></span><span></span><span></span></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  return id;
+}
+function removeTyping(id){const el=document.getElementById(id);if(el)el.remove();}
+
+render();
+</script>
+</body>
+</html>
